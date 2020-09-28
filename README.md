@@ -19,9 +19,11 @@
 * Objects ({} and others), used to group related data and code.
 * Functions (x => x * 2 and others), used to refer to code.
 
-`console.log(typeof([])); // "object"`
-`console.log(typeof(new Date())); // "object"`
-`console.log(typeof(/(hello|goodbye)/)); // "object"`
+```
+console.log(typeof([])); // "object"
+console.log(typeof(new Date())); // "object"
+console.log(typeof(/(hello|goodbye)/)); // "object"
+```
 
 ##### Ps.: js has no variable types, but it does have value types
 
