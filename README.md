@@ -46,3 +46,14 @@ double(money);
 console.log(money);
 ```
 We're passing the value of money, not the variable money. So the `console.log` results 10.
+
+
+- Undefined: Only one value, undefined.
+- Null: Only one value, null.
+- Booleans: Two values: true and false.
+- Numbers: One value for each floating point math number.
+
+##### Interesting facts about JavaScript numbers:
+- Not all numbers can be perfectly represented in JavaScript. Their decimal part offers more precision closer to 0, and less precision further away from it. We can say that their decimal point is “floating”.
+- Numbers from invalid math operations like 1 / 0 or 0 / 0 are special. NaN is one of such numbers. They may appear due to coding mistakes.
+typeof(NaN) is a number because NaN is a numeric value. It’s called “Not a Number” because it represents the idea of an "invalid" number.
