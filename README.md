@@ -66,3 +66,17 @@ typeof(NaN) is a number because NaN is a numeric value. It’s called “Not a N
 
 *PS.: Writing 2 or "hello" always “summons” the same number or a string value. But writing {} or function() {} always creates a brand new, different value. This idea is crucial to understanding equality in JavaScript* 
 
+
+
+### Equality
+
+###### JavaScript has several kinds of equality. They include Same Value Equality, Strict Equality, and Loose Equality.
+- Same Value Equality, or Object.is(a, b), matches the concept of the sameness of values that we introduced in the previous module.
+    - Understanding this kind of equality helps prevent bugs! You will often need to know when you’re dealing with the same value, and when you’re dealing with two different values.
+    - When we draw a diagram of values and variables, the same value cannot appear twice on it. Object.is(a, b) is true when variables a and b point to the same value on our diagram.
+    - # Same Value Equality # is the easiest to explain, which is why we started with it. However, it’s verbose and a bit annoying to write.
+- In practice, you will use Strict Equality, or a === b, most often. It is equivalent to the Same Value Equality except for two rare special cases:
+    - NaN === NaN is false, even though they are the same value.
+    - 0 === -0 and -0 === 0 is true, but they are different values.
+- You can check whether x is NaN using Number.isNaN(x).
+- Loose Equality (==) is a set of arcane rules and is often avoided.
