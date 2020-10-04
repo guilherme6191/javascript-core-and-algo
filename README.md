@@ -48,6 +48,8 @@ console.log(money);
 We're passing the value of money, not the variable money. So the `console.log` results 10.
 
 
+##### Some types and its values:
+
 - Undefined: Only one value, undefined.
 - Null: Only one value, null.
 - Booleans: Two values: true and false.
