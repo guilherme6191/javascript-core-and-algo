@@ -71,12 +71,22 @@ typeof(NaN) is a number because NaN is a numeric value. It’s called “Not a N
 ### Equality
 
 ###### JavaScript has several kinds of equality. They include Same Value Equality, Strict Equality, and Loose Equality.
+
 - Same Value Equality, or Object.is(a, b), matches the concept of the sameness of values that we introduced in the previous module.
     - Understanding this kind of equality helps prevent bugs! You will often need to know when you’re dealing with the same value, and when you’re dealing with two different values.
     - When we draw a diagram of values and variables, the same value cannot appear twice on it. Object.is(a, b) is true when variables a and b point to the same value on our diagram.
-    - # Same Value Equality # is the easiest to explain, which is why we started with it. However, it’s verbose and a bit annoying to write.
+    - Same Value Equality is the easiest to explain, which is why we started with it. However, it’s verbose and a bit annoying to write.
 - In practice, you will use Strict Equality, or a === b, most often. It is equivalent to the Same Value Equality except for two rare special cases:
     - NaN === NaN is false, even though they are the same value.
     - 0 === -0 and -0 === 0 is true, but they are different values.
 - You can check whether x is NaN using Number.isNaN(x).
 - Loose Equality (==) is a set of arcane rules and is often avoided.
+
+### Mutation
+
+- Objects are never “nested” in our universe. Properties "point" to objects
+- Pay close attention to which wire is on the left side of assignment.
+- Changing an object’s property is also called mutating that object.
+- If you mutate an object, your code will “see” that change via any wires pointing at that object. Sometimes, this may be what you want. However, mutating accidentally shared data may cause bugs.
+- Mutating the objects you’ve just created in code is safe. Broadly, how much you’ll use mutation depends on your app’s architecture. Even if you won’t use it a lot, it’s worth your time to understand how it works.
+- You can declare a variable with const instead of let. That allows you to enforce that this variable’s wire always points at the same value. But remember that const does not prevent object mutation!
