@@ -1,5 +1,5 @@
 ## Named functions
-## Source: https://johnresig.com/apps/learn/
+#### Source: https://johnresig.com/apps/learn/
 
 #### we can refer the function from inside of it
 ```
