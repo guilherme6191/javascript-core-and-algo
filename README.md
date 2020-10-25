@@ -90,3 +90,11 @@ typeof(NaN) is a number because NaN is a numeric value. It’s called “Not a N
 - If you mutate an object, your code will “see” that change via any wires pointing at that object. Sometimes, this may be what you want. However, mutating accidentally shared data may cause bugs.
 - Mutating the objects you’ve just created in code is safe. Broadly, how much you’ll use mutation depends on your app’s architecture. Even if you won’t use it a lot, it’s worth your time to understand how it works.
 - You can declare a variable with const instead of let. That allows you to enforce that this variable’s wire always points at the same value. But remember that const does not prevent object mutation!
+
+### Prototypes
+
+- When reading obj.prop, if obj doesn’t have a prop property, JavaScript will look for obj.__proto__.prop, then it will look for obj.__proto__.__proto__.prop, and so on, until it either finds our property or reaches the end of the prototype chain.
+- When writing to obj.prop, JavaScript will usually write to the object directly instead of traversing the prototype chain.
+- We can use obj.hasOwnProperty('prop') to determine whether our object has an own property called prop. In other words, it means there is a property wire called prop attached to that object directly.
+- We can “pollute” a prototype shared by many objects by mutating it. We can even do this to the Object Prototype — the default prototype for {} objects! But we shouldn’t do that unless we’re pranking our colleagues.
+- You probably won’t use prototypes much directly in practice. However, they are fundamental to how JavaScript objects work, so it is handy to understand their underlying mechanics. Some advanced JavaScript features, including classes, can be expressed in terms of prototypes.
