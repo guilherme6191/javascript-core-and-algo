@@ -1,4 +1,6 @@
-# js Mental Model - cheatsheet
+##### Source: Dan Abramov's series on javascript mental models https://justjavascript.com/
+
+# JS Overview
 
 ### Values and Types
   - There are values, and then there’s everything else. We can think of values as different things “floating” in our JavaScript universe. They don’t exist inside our code, but we can refer to them from our code.
