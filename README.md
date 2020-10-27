@@ -2,7 +2,7 @@
 
 
 
-# JS Overview
+## JS Overview
 
 ##### Source: Dan Abramov's series on javascript mental models https://justjavascript.com/
 ### Values and Types
@@ -106,7 +106,7 @@ typeof(NaN) is a number because NaN is a numeric value. It’s called “Not a N
 
 
 
-# Learning Advanced Javascript
+## Learning Advanced Javascript
 ##### A practical approach to some of the advanced concepts of javascript. Source: https://johnresig.com/apps/learn/ derived from  Secrets of the JavaScript Ninja by John Resig.
 
 ### Named functions
