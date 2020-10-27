@@ -1,5 +1,5 @@
 *Source: https://johnresig.com/apps/learn/* 
-#### Named functions
+### Named functions
 ##### We can refer the function from inside of it
 ```
 function yell(n){ 
@@ -63,7 +63,7 @@ console.log( "Elements found: ", getElements("pre").length );
 console.log( "Cache found: ", getElements.cache.pre.length );
 ````
 
-#### Context
+### Context
 ```
 function katana(){ 
   this.isSharp = true; 
@@ -108,8 +108,7 @@ loop([0, 1, 2], function(value, i){
 });
 ```
 
-#### Instances
-
+### Instances
 ##### `new` operator
 ```
 function Ninja(){ 
@@ -139,7 +138,7 @@ assert( user, "This was defined correctly, even if it was by mistake." );
 assert( name == "Resig", "The right name was maintained." );
 ```
 
-#### Flexible arguments
+### Flexible arguments
 ##### Using variable number of arguments
 ```
 function merge(root){
@@ -170,4 +169,104 @@ function multiMax(multi){
 assert( multiMax(3, 1, 2, 3) == 9, "3*3=9 (First arg, by largest.)" );
 ```
 
-#### Closure
+### Closure
+##### Simple Closure
+```
+var count = 0; 
+ 
+var timer = setInterval(function(){ 
+  if ( count < 5 ) { 
+    log( "Timer call: ", count ); 
+    count++; 
+  } else { 
+    assert( count == 5, "Count came via a closure, accessed each step." ); 
+    assert( timer, "The timer reference is also via a closure." ); 
+    clearInterval( timer ); 
+  } 
+}, 100);
+```
+
+##### Private properties using closures (and `new` keyword)
+```
+function Ninja(){ 
+  var slices = 0; 
+   
+  this.getSlices = function(){ 
+    return slices; 
+  }; 
+  this.slice = function(){ 
+    slices++; 
+  }; 
+} 
+ 
+var ninja = new Ninja(); // using new keyword
+ninja.slice(); 
+assert( ninja.getSlices() == 1, "We're able to access the internal slice data." ); 
+assert( ninja.slices === undefined, "And the private data is inaccessible to us." );
+```
+
+
+##### Checking value of variables
+```
+var a = 5;
+function runMe(a){
+ assert( a == 6, "Check the value of a." );
+
+ function innerRun(){
+   assert( b == 7, "Check the value of b." );
+   assert( c == undefined, "Check the value of c." );
+ }
+
+ var b = 7;
+ innerRun();
+ var c = 8;
+}
+runMe(6);
+
+for ( var d = 0; d < 3; d++ ) {
+ setTimeout(function(){
+   assert( d == 3, "Check the value of d." );
+ }, 100);
+}
+```
+
+### Temporary Scope
+##### Self executing temporary function
+```
+(function(){
+  var count = 0;
+
+  var timer = setInterval(function(){
+    if ( count < 5 ) {
+      log( "Timer call: ", count );
+      count++;
+    } else {
+      assert( count == 5, "Count came via a closure, accessed each step." );
+      assert( timer, "The timer reference is also via a closure." );
+      clearInterval( timer );
+    }
+  }, 100);
+})();
+
+assert( typeof count == "undefined", "count doesn't exist outside the wrapper" );
+assert( typeof timer == "undefined", "neither does timer" );
+```
+
+##### Fix the broken clojures in this loop
+```
+var count = 0; 
+for ( var i = 0; i < 4; i++ ) { 
+  setTimeout(function(){ 
+    assert( i == count++, "Check the value of i." ); 
+  }, i * 200); 
+}
+```
+###### FIX:
+```
+var count = 0; 
+for ( var i = 0; i < 4; i++ ) (function(i){ 
+  setTimeout(function(){ 
+    assert( i == count++, "Check the value of i." ); 
+  }, i * 200); 
+})(i);
+```
