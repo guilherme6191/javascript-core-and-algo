@@ -1,7 +1,6 @@
-## Named functions
-#### Source: https://johnresig.com/apps/learn/
-
-#### We can refer the function from inside of it
+*Source: https://johnresig.com/apps/learn/* 
+#### Named functions
+##### We can refer the function from inside of it
 ```
 function yell(n){ 
   return n > 0 ? yell(n-1) + "a" : "hiy"; 
@@ -9,7 +8,7 @@ function yell(n){
 assert( yell(4) == "hiyaaaa", "Calling the function by itself comes naturally." );
 ```
 
-#### What is the name of a function?
+##### What is the name of a function?
 ```
 var ninja = {
   yell: function(n){
@@ -30,7 +29,6 @@ try {
 ```
 
 ##### Let's give the anon function a name
-
 ```
 var ninja = { 
   yell: function yell(n){ 
@@ -46,7 +44,6 @@ assert( samurai.yell(4) == "hiyaaaa", "The method correctly calls itself." ); //
 
 
 #### Function as Objects - can be used as cache
-
 ```
 function getElements( name ) { 
   var results; 
@@ -67,7 +64,6 @@ console.log( "Cache found: ", getElements.cache.pre.length );
 ````
 
 #### Context
-
 ```
 function katana(){ 
   this.isSharp = true; 
@@ -111,3 +107,67 @@ loop([0, 1, 2], function(value, i){
   assert(this instanceof Array, "The context should be the full array."); 
 });
 ```
+
+#### Instances
+
+##### `new` operator
+```
+function Ninja(){ 
+  this.name = "Ninja"; 
+} 
+ 
+var ninjaA = Ninja(); 
+assert( !ninjaA, "Is undefined, not an instance of Ninja." ); 
+ 
+var ninjaB = new Ninja(); 
+assert( ninjaB.name == "Ninja", "Property exists on the ninja instance." );
+```
+
+##### arguments.callee is the function itself - and this way we make sure a new instance is created
+```
+function User(first, last){ 
+  if ( !(this instanceof arguments.callee /* or User */) ) 
+    return new User(first, last); 
+   
+  this.name = first + " " + last; 
+} 
+ 
+var name = "Resig"; 
+var user = User("John", name); 
+ 
+assert( user, "This was defined correctly, even if it was by mistake." ); 
+assert( name == "Resig", "The right name was maintained." );
+```
+
+#### Flexible arguments
+##### Using variable number of arguments
+```
+function merge(root){
+  for ( var i = 1; i < arguments.length; i++ )
+    for ( var key in arguments[i] )
+      root[key] = arguments[i][key];
+  return root;
+}
+
+var merged = merge({name: "John"}, {city: "Boston"}, {weather: "Cold"});
+assert( merged.name == "John", "The original name is intact." );
+assert( merged.city == "Boston", "And the city has been copied over." );
+assert( merged.weather == "Cold", "Third argument also copied over." );
+```
+
+##### Implement a multiplication function (first argument by largest number)
+```
+function multiMax(multi){ 
+  // Make an array of all but the first argument 
+  var allButFirst = Array().slice.call( arguments, 1 ); 
+ 
+  // Find the largest number in that array of arguments 
+  var largestAllButFirst = Math.max.apply( Math, allButFirst ); 
+ 
+  // Return the multiplied result 
+  return multi * largestAllButFirst; 
+} 
+assert( multiMax(3, 1, 2, 3) == 9, "3*3=9 (First arg, by largest.)" );
+```
+
+#### Closure
