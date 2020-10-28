@@ -380,3 +380,197 @@ for ( var i = 0; i < 4; i++ ) (function(i){
   }, i * 200); 
 })(i);
 ```
+
+### Function Prototypes
+##### Adding a prototyped method to a function
+```
+function Ninja(){}
+
+Ninja.prototype.swingSword = function(){
+  return true;
+};
+
+var ninjaA = Ninja();
+assert( !ninjaA, "Is undefined, not an instance of Ninja." );
+var ninjaB = new Ninja();
+assert( ninjaB.swingSword(), "Method exists and is callable." );
+```
+
+##### Prototyped properties affect all objects of the same constructor, simultaneously, even if they already exist.
+```
+function Ninja(){ 
+  this.swung = true; 
+} 
+ 
+var ninjaA = new Ninja(); 
+var ninjaB = new Ninja(); 
+ 
+Ninja.prototype.swingSword = function(){ 
+  return this.swung; 
+}; 
+ 
+assert( ninjaA.swingSword(), "Method exists, even out of order." ); 
+assert( ninjaB.swingSword(), "and on all instantiated objects." );
+```
+
+### Instance Type
+##### Create another instance of Ninja
+```
+var ninja = (function(){
+ function Ninja(){}
+ return new Ninja();
+})();
+// Make another instance of Ninja
+var ninjaB = new ninja.constructor;
+assert( ninja.constructor == ninjaB.constructor, "The ninjas come from the same source." );
+```
+### Inheritance
+##### Prototype inheritance
+```
+function Person(){} 
+Person.prototype.dance = function(){}; 
+ 
+function Ninja(){} 
+ 
+// Achieve similar, but non-inheritable, results 
+Ninja.prototype = Person.prototype; 
+Ninja.prototype = { dance: Person.prototype.dance }; 
+ 
+assert( (new Ninja()) instanceof Person, "Will fail with bad prototype chain." ); 
+ 
+// Only this maintains the prototype chain 
+Ninja.prototype = new Person(); 
+ 
+var ninja = new Ninja(); 
+assert( ninja instanceof Ninja, "ninja receives functionality from the Ninja prototype" ); 
+assert( ninja instanceof Person, "... and the Person prototype" ); 
+assert( ninja instanceof Object, "... and the Object prototype" );
+```
+
+### Built-in Prototypes
+##### We can also modify built-in prototype methods
+```
+if (!Array.prototype.forEach) { 
+  Array.prototype.forEach = function(fn){ 
+    for ( var i = 0; i < this.length; i++ ) { 
+      fn( this[i], i, this ); 
+    } 
+  }; 
+} 
+ 
+["a", "b", "c"].forEach(function(value, index, array){ 
+  assert( value, "Is in position " + index + " out of " + (array.length - 1) ); 
+});
+```
+
+### Enforcing function context
+```
+var Button = { 
+  click: function(){ 
+    this.clicked = true; 
+  } 
+}; 
+ 
+var elem = document.createElement("li"); 
+elem.innerHTML = "Click me!"; 
+elem.onclick = Button.click; 
+document.getElementById("results").appendChild(elem); 
+ 
+elem.onclick(); 
+assert( elem.clicked, "The clicked property was accidentally set on the element" );
+```
+###### How to keep original context?
+```
+function bind(context, name){ 
+  return function(){ 
+    return context[name].apply(context, arguments); 
+  }; 
+} 
+ 
+var Button = { 
+  click: function(){ 
+    this.clicked = true; 
+  } 
+}; 
+ 
+var elem = document.createElement("li"); 
+elem.innerHTML = "Click me!"; 
+elem.onclick = bind(Button, "click"); 
+document.getElementById("results").appendChild(elem); 
+ 
+elem.onclick(); 
+assert( Button.clicked, "The clicked property was correctly set on the object" );
+```
+
+##### Our final target (the .bind method from Prototype.js)
+```
+Function.prototype.bind = function(){
+  var fn = this, args = Array.prototype.slice.call(arguments), object = args.shift();
+  return function() {
+    return fn.apply(object,
+      args.concat(Array.prototype.slice.call(arguments)));
+  };
+};
+
+var Button = {
+  click: function(value){
+    this.clicked = value;
+  }
+};
+
+var elem = document.createElement("li");
+elem.innerHTML = "Click me!";
+elem.onclick = Button.click.bind(Button, true);
+document.getElementById("results").appendChild(elem);
+
+elem.onclick();
+assert( Button.clicked === true, "The clicked property was correctly set on the object" );
+```
+
+### Overloading using length
+```
+function addMethod(object, name, fn){
+  // Save a reference to the old method
+  var old = object[ name ];
+
+  // Overwrite the method with our new one
+  object[ name ] = function(){
+    // Check the number of incoming arguments,
+    // compared to our overloaded function
+    if ( fn.length == arguments.length )
+      // If there was a match, run the function
+      return fn.apply( this, arguments );
+
+    // Otherwise, fallback to the old method
+    else if ( typeof old === "function" )
+      return old.apply( this, arguments );
+  };
+}
+
+function Ninjas(){
+  var ninjas = [ "Dean Edwards", "Sam Stephenson", "Alex Russell" ];
+  addMethod(this, "find", function(){
+    return ninjas;
+  });
+  addMethod(this, "find", function(name){
+    var ret = [];
+    for ( var i = 0; i < ninjas.length; i++ )
+      if ( ninjas[i].indexOf(name) == 0 )
+        ret.push( ninjas[i] );
+    return ret;
+  });
+  addMethod(this, "find", function(first, last){
+    var ret = [];
+    for ( var i = 0; i < ninjas.length; i++ )
+      if ( ninjas[i] == (first + " " + last) )
+        ret.push( ninjas[i] );
+    return ret;
+  });
+}
+
+var ninjas = new Ninjas();
+assert( ninjas.find().length == 3, "Finds all ninjas" );
+assert( ninjas.find("Sam").length == 1, "Finds ninjas by first name" );
+assert( ninjas.find("Dean", "Edwards").length == 1, "Finds ninjas by first and last name" );
+assert( ninjas.find("Alex", "X", "Russell") == null, "Does nothing" );
+```
